@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 """
-Copyright (c) 2019 - present AppSeed.us
+Copyright (c) 2023 - present Tuan Tran
 """
 
 from flask import render_template, redirect, request, url_for
@@ -14,9 +14,10 @@ from flask_dance.contrib.github import github
 from apps import db, login_manager
 from apps.authentication import blueprint
 from apps.authentication.forms import LoginForm, CreateAccountForm
-from apps.authentication.models import Users
+from apps.authentication.models import Users, News
 
 from apps.authentication.util import verify_pass
+
 
 @blueprint.route('/')
 def route_default():
@@ -138,3 +139,42 @@ def not_found_error(error):
 @blueprint.errorhandler(500)
 def internal_error(error):
     return render_template('home/page-500.html'), 500
+
+
+
+
+@blueprint.route('/news')
+def index():
+    news_list = News.query.all()
+    return render_template('home/tbl_bootstrap.html', news_list=news_list)
+
+
+@blueprint.route('/news/create', methods=['GET', 'POST'])
+def create_news():
+    if request.method == 'POST':
+        title = request.form['title']
+        content = request.form['content']
+        news_entry = News(title=title, content=content)
+        db.session.add(news_entry)
+        db.session.commit()
+        return redirect('/')
+    return render_template('create.html')
+
+
+@blueprint.route('/news/edit/<int:id>', methods=['GET', 'POST'])
+def edit_news(id):
+    news_entry = News.query.get(id)
+    if request.method == 'POST':
+        news_entry.title = request.form['title']
+        news_entry.content = request.form['content']
+        db.session.commit()
+        return redirect('/')
+    return render_template('edit.html', news_entry=news_entry)
+
+
+@blueprint.route('/news/delete/<int:id>')
+def delete_news(id):
+    news_entry = News.query.get(id)
+    db.session.delete(news_entry)
+    db.session.commit()
+    return redirect('/news')

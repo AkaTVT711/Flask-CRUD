@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 """
-Copyright (c) 2019 - present AppSeed.us
+Copyright (c) 2023 - present Tuan Tran
 """
 
 import os
@@ -9,7 +9,6 @@ from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from importlib import import_module
-
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -27,18 +26,18 @@ def register_blueprints(app):
 
 
 def configure_database(app):
-
     @app.before_first_request
     def initialize_database():
         try:
             db.create_all()
         except Exception as e:
 
-            print('> Error: DBMS Exception: ' + str(e) )
+            print('> Error: DBMS Exception: ' + str(e))
 
             # fallback to SQLite
             basedir = os.path.abspath(os.path.dirname(__file__))
-            app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db.sqlite3')
+            app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir,
+                                                                                                          'db.sqlite3')
 
             print('> Fallback to SQLite ')
             db.create_all()
@@ -47,13 +46,15 @@ def configure_database(app):
     def shutdown_session(exception=None):
         db.session.remove()
 
+
 from apps.authentication.oauth import github_blueprint
+
 
 def create_app(config):
     app = Flask(__name__)
     app.config.from_object(config)
     register_extensions(app)
     register_blueprints(app)
-    app.register_blueprint(github_blueprint, url_prefix="/login")    
+    app.register_blueprint(github_blueprint, url_prefix="/login")
     configure_database(app)
     return app
