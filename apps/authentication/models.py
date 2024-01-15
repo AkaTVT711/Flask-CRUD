@@ -47,6 +47,7 @@ class Users(db.Model, UserMixin):
 
     @classmethod
     def find_by_email(cls, email: str) -> "Users":
+
         return cls.query.filter_by(email=email).first()
 
     @classmethod
@@ -115,27 +116,6 @@ class Stamps(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     earned_date = db.Column(db.DateTime, default=datetime.utcnow)
-
-
-# News Model
-class News(db.Model):
-    __tablename__ = 'news'
-
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100))
-    content = db.Column(db.Text)
-    published_date = db.Column(db.DateTime, default=datetime.utcnow)
-
-
-# Products Model
-class Products(db.Model):
-    __tablename__ = 'products'
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
-    description = db.Column(db.Text)
-    price = db.Column(db.DECIMAL)
-    stock = db.Column(db.Integer)
 
 
 # Promotions Model
