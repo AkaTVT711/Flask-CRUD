@@ -9,7 +9,6 @@ from flask_login import (
     login_user,
     logout_user
 )
-from flask_dance.contrib.github import github
 
 from apps import db, login_manager
 from apps.authentication import blueprint
@@ -23,24 +22,16 @@ from apps.authentication.util import verify_pass
 def route_default():
     return redirect(url_for('authentication_blueprint.login'))
 
+
 # Login & Registration
-
-@blueprint.route("/github")
-def login_github():
-    """ Github login """
-    if not github.authorized:
-        return redirect(url_for("github.login"))
-
-    res = github.get("/user")
-    return redirect(url_for('home_blueprint.index'))
 
 @blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     login_form = LoginForm(request.form)
-    if 'login' in request.form:
+    if request.method == 'POST':
 
         # read form data
-        user_id  = request.form['username'] # we can have here username OR email
+        user_id = request.form['username']  # we can have here username OR email
         password = request.form['password']
 
         # Locate user
@@ -52,13 +43,12 @@ def login():
             user = Users.find_by_email(user_id)
 
             if not user:
-                return render_template( 'accounts/login.html',
-                                        msg='Unknown User or Email',
-                                        form=login_form)
+                return render_template('accounts/login.html',
+                                       msg='Unknown User or Email',
+                                       form=login_form)
 
         # Check the password
         if verify_pass(password, user.password):
-
             login_user(user)
             return redirect(url_for('authentication_blueprint.route_default'))
 
@@ -117,7 +107,8 @@ def register():
 @blueprint.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('authentication_blueprint.login')) 
+    return redirect(url_for('authentication_blueprint.login'))
+
 
 # Errors
 
@@ -139,4 +130,3 @@ def not_found_error(error):
 @blueprint.errorhandler(500)
 def internal_error(error):
     return render_template('home/page-500.html'), 500
-

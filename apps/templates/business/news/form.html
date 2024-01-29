@@ -1,0 +1,126 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} UI Tables {% endblock %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<!-- [ Main Content ] start -->
+<section class="pcoded-main-container">
+    <div class="pcoded-wrapper">
+
+        <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+                <!-- [ breadcrumb ] start -->
+                <div class="page-header">
+                    <div class="page-block">
+                        <div class="row align-items-center">
+                            <div class="col-md-12">
+                                <div class="page-header-title">
+                                    <h5 class="m-b-10">News</h5>
+                                </div>
+                                <ul class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
+                                    <li class="breadcrumb-item"><a href="/admin/news">News list</a></li>
+                                    {% if form.id.data %}
+                                    <li class="breadcrumb-item"><a href="javascript:">Edit News Entry</a></li>
+                                    {% else %}
+                                    <li class="breadcrumb-item"><a href="javascript:">Create News Entry</a></li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- [ breadcrumb ] end -->
+                <div class="main-body">
+                    <div class="page-wrapper">
+                        <!-- [ Main Content ] start -->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        {% if form.id.data %}
+                                        <h5>Edit News</h5>
+                                        <a href="/admin/news/view/{{ form.id.data }}" class="btn btn-outline-dark">View mode</a>
+                                        {% else %}
+                                        <h5>Add a new entry</h5>
+                                        {% endif %}
+                                    </div>
+                                    {% with messages = get_flashed_messages() %}
+                                    {% if messages %}
+                                    <div class="alert alert-primary">
+                                        <div class="media align-items-center"><i
+                                                class="feather icon-alert-circle h2"></i>
+                                            {% for message in messages %}
+                                            <div class="media-body ms-3"> {{ message }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% endwith %}
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <form method="POST" id="news-form">
+                                                    <div class="form-group">
+                                                        <label for="title">Title</label>
+                                                        <input type="text" class="form-control"
+                                                               id="title"
+                                                               name="title"
+                                                               placeholder="Enter title" {% if form.title.data %}
+                                                               value="{{ form.title.data }}" {% endif %} required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Content</label>
+                                                        {% if form.content.data %}
+                                                        {{ form.content }}
+                                                        {% else %}
+                                                        {{ ckeditor.create(name='content') }}
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="publish_date">Publish Date:</label>
+                                                        <input type="date"
+                                                               class="form-control col-sm-4 datepicker-input"
+                                                               id="publish_date" name="publish_date" {% if
+                                                               form.publish_date.data %}
+                                                               value="{{ form.publish_date.data}}"
+                                                               {% endif %}>
+
+                                                    </div>
+                                                    <div class="form-group form-check">
+                                                        <input type="checkbox" class="form-check-input" id="status"
+                                                               name="status" {% if form.status.data %} checked {% endif
+                                                               %}>
+                                                        <label class="form-check-label" for="status">Active</label>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-success">Save</button>
+                                                    <button type="submit" class="btn btn-warning">Delete</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- [ Main Content ] end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+</section>
+<!-- [ Main Content ] end -->
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+{% endblock javascripts %}

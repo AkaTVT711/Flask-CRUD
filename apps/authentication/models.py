@@ -117,12 +117,3 @@ class Stamps(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     earned_date = db.Column(db.DateTime, default=datetime.utcnow)
 
-
-# Promotions Model
-class Promotions(db.Model):
-    __tablename__ = 'promotions'
-
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100))
-    description = db.Column(db.Text)
-    start_date = db.Column(db.DateTime)

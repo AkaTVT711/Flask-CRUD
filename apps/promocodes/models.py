@@ -1,14 +1,14 @@
 from apps import db
 
 
-class Products(db.Model):
-    __tablename__ = 'products'
+class PromoCodes(db.Model):
+    __tablename__ = 'promotions'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
+    code = db.Column(db.String(100))
     description = db.Column(db.Text)
-    price = db.Column(db.DECIMAL)
-    stock = db.Column(db.Integer)
+    status = db.Column(db.Boolean, default=False)
+    quantity = db.Column(db.Integer)
 
     @classmethod
     def get_all(cls):
@@ -21,10 +21,10 @@ class Products(db.Model):
     @classmethod
     def create(cls, data):
         new_record = cls(
-            name=data.get('name'),
+            code=data.get('code'),
             description=data.get('description'),
-            price=data.get('price'),
-            stock=data.get('stock'),
+            status=data.get('status'),
+            quantity=data.get('quantity'),
         )
         db.session.add(new_record)
         db.session.commit()
@@ -36,9 +36,9 @@ class Products(db.Model):
             return None
         item = cls.get_by_id(id)
 
-        item.name = form.get('name')
+        item.code = form.get('code')
         item.description = form.get('description')
-        item.price = form.get('price')
-        item.stock = form.get('stock')
+        item.status = form.get('status')
+        item.quantity = form.get('quantity')
         db.session.commit()
         return cls

@@ -9,7 +9,6 @@ from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from importlib import import_module
-from apps.news import blueprint as news_blueprint  # Import the news blueprint
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -21,9 +20,10 @@ def register_extensions(app):
 
 
 def register_blueprints(app):
-    for module_name in ('authentication', 'home', 'news', 'products'):
+    for module_name in ('authentication', 'home', 'news', 'products', 'promocodes'):
         module = import_module('apps.{}.routes'.format(module_name))
         app.register_blueprint(module.blueprint)
+
 
 def configure_database(app):
     @app.before_first_request
@@ -47,14 +47,10 @@ def configure_database(app):
         db.session.remove()
 
 
-from apps.authentication.oauth import github_blueprint
-
-
 def create_app(config):
     app = Flask(__name__)
     app.config.from_object(config)
     register_extensions(app)
     register_blueprints(app)
-    app.register_blueprint(github_blueprint, url_prefix="/login")
     configure_database(app)
     return app

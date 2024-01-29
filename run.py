@@ -7,7 +7,7 @@ import os
 from flask_migrate import Migrate
 from flask_minify import Minify
 from sys import exit
-
+from flask_ckeditor import CKEditor
 from apps.config import config_dict
 from apps import create_app, db
 
@@ -26,6 +26,7 @@ except KeyError:
     exit('Error: Invalid <config_mode>. Expected values [Debug, Production] ')
 
 app = create_app(app_config)
+ckeditor = CKEditor(app)
 Migrate(app, db)
 
 if not DEBUG:

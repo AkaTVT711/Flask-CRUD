@@ -13,6 +13,18 @@
 
         <div class="pcoded-content">
             <div class="pcoded-inner-content">
+                <!-- [ breadcrumb ] start -->
+                <div class="page-header">
+                    <div class="page-block">
+                        <div class="row align-items-center">
+                            <div class="col-md-12">
+                                <ul class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="main-body">
                     <div class="page-wrapper">
                         <!-- [ Main Content ] start -->
@@ -23,28 +35,42 @@
                                     <div class="card-header">
                                         <h5>News Entries</h5>
                                     </div>
-                                    <a href="/create">Create New Entry</a>
                                     <div class="card-block card-body table-border-style">
+                                        <div class="btn-group mb-2 mr-2">
+                                            <a href="/admin/news/create" class="label theme-bg3 text-white f-12">Create New
+                                                Entry</a>
+                                        </div>
                                         <table class="table table-hover">
                                             <thead>
                                             <tr>
                                                 <th>ID</th>
                                                 <th>Title</th>
-                                                <th>Content</th>
                                                 <th>Published Date</th>
+                                                <th>Status</th>
                                                 <th>Actions</th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            {% for news_entry in news_list %}
+                                            {% for news in news_list %}
                                             <tr>
-                                                <td>{{ news_entry.id }}</td>
-                                                <td>{{ news_entry.title }}</td>
-                                                <td>{{ news_entry.content }}</td>
-                                                <td>{{ news_entry.published_date }}</td>
+                                                <td>{{ news.id }}</td>
+                                                <td>{{ news.title }}</td>
+                                                <td>{{ news.publish_date }}</td>
+                                                <td>{% if news.status %}
+                                                    <!--if block html code-->
+                                                    <i class="fas fa-circle text-c-green f-10 m-r-15"></i>
+                                                    {% else %}
+                                                    <!--else block html code-->
+                                                    <i class="fas fa-circle text-c-red f-10 m-r-15"></i>
+                                                    {% endif %}
+                                                </td>
                                                 <td>
-                                                    <a href="/edit/{{ news_entry.id }}">Edit</a>
-                                                    <a href="/delete/{{ news_entry.id }}">Delete</a>
+                                                    <a href="/admin/news/{{ news.id }}"
+                                                       class="label theme-bg2 text-white f-12">Edit</a>
+                                                    <a href="/admin/news/delete/{{ news.id }}"
+                                                       class="label theme-bg text-white f-12">Remove</a>
+                                                    <a href="/admin/news/view/{{ news.id }}"
+                                                       class="label theme-bg text-white f-12">View</a>
                                                 </td>
                                             </tr>
                                             {% endfor %}
